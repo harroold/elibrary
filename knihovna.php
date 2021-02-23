@@ -22,7 +22,7 @@
 
   }
 
-  if(isset($_GET['likeBook']) {
+  if(isset($_GET['likeBook'])) {
     $bookId = $_GET['likeBook'];
     $userId = $_SESSION["identity"]["id"];
     $sql = "SELECT * from user_rated_book WHERE users_id = :userId AND books_id = :bookId";
