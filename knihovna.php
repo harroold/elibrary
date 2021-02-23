@@ -21,6 +21,35 @@
     exit();    
 
   }
+
+  if(isset($_GET['likeBook']) {
+    $bookId = $_GET['likeBook'];
+    $userId = $_SESSION["identity"]["id"];
+    $sql = "SELECT * from user_rated_book WHERE users_id = :userId AND books_id = :bookId";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([
+        ":userId" => $userId,
+        ":bookId" => $bookId
+    ]);
+    $kniha = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    if ($kniha != null) {
+        setFlash("Tuto knihu již máte mezi oblíbenými", "error");
+        header("Location: knihovna.php");
+        exit();
+    }
+
+
+    $sql = "INSERT INTO user_rated_book (users_id, books_id) VALUES (:userId, :bookId)";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([
+        ":userId" => $userId,
+        ":bookId" => $bookId
+    ]);
+    setFlash("Kniha byla uložena mezi vaše oblíbené", "success");
+    header("Location: knihovna.php");
+    exit();
+  }
+
 //   if(isset($_GET["like_id"])) {
 
 //     $bookId = $_GET["like_id"];
@@ -72,6 +101,7 @@
                         <p class="card-text"><?= $book["content"]; ?></p>
                         <p>
                             <a class="btn btn-primary" href="upravit-knihu.php?id=<?= $book["id"]; ?>">Upravit knihu</a>
+                            <a class="btn btn-primary" href="knihovna.php?likeBook=<?= $book["id"]; ?>"">❤</a>
                         </p>
                         <p>
                                         <!-- Button trigger modal -->
