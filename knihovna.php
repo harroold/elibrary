@@ -18,11 +18,11 @@
     setFlash("Kniha přidána do oblíbených", "success");
 
     header("Location: knihovna.php");
-    exit();    
-
+    exit();
   }
 
-  if(isset($_GET['likeBook'])) {
+
+  if (isset($_GET['likeBook'])) {
     $bookId = $_GET['likeBook'];
     $userId = $_SESSION["identity"]["id"];
     $sql = "SELECT * from user_rated_book WHERE users_id = :userId AND books_id = :bookId";
@@ -33,7 +33,7 @@
     ]);
     $kniha = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
     if ($kniha != null) {
-        setFlash("Tuto knihu již máte mezi oblíbenými", "error");
+        setFlash("Tuto knihu již máte mezi oblíbenými", "danger");
         header("Location: knihovna.php");
         exit();
     }
@@ -48,7 +48,7 @@
     setFlash("Kniha byla uložena mezi vaše oblíbené", "success");
     header("Location: knihovna.php");
     exit();
-  }
+}
 
 //   if(isset($_GET["like_id"])) {
 

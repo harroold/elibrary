@@ -2,6 +2,7 @@
 <?php
 $id = $_GET["id"];
 
+
 if(!isset($_SESSION["identity"]) || $_SESSION["identity"]["id"] !== $id){
     setFlash("Nemáte právo prohlížet tuto stránku", "danger");
     header("Location: index.php");
@@ -109,6 +110,32 @@ if(isset($_POST["changePassword"])) {
     }
 }
 
+if (isset($_GET['unlikeBook'])) {
+    $bookId = $_GET['unlikeBook'];
+    $userId = $_SESSION["identity"]["id"];
+    $sql = "SELECT * fROM user_rated_book WHERE users_id = :userId AND books_id = :bookId";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([
+        ":userId" => $userId,
+        ":bookId" => $bookId
+    ]);
+    $kniha = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    if ($kniha == null) {
+        header("Location: profil.php?id=" . $userId);
+        exit();
+    }
+    $sql = "DELETE FROM user_rated_book WHERE users_id = :userId AND books_id = :bookId";
+    $stmt = $db->prepare($sql);
+    $stmt->execute([
+        ":userId" => $userId,
+        ":bookId" => $bookId
+    ]);
+
+    setFlash("Kniha byla odebrána z vašich oblíbených", "success");
+    header("Location: profil.php?id=" . $userId);
+    exit();
+}
+
 
 if(isset($_GET["logout"])) {
     unset($_SESSION["identity"]);
@@ -172,7 +199,7 @@ if(isset($_GET["logout"])) {
                         <?php for($i = 0; $i < (int)$book["stars"]; $i++) { echo "*"; } ?>
                         </p> 
                         <p>
-                            <a class="btn btn-danger" href="knihovna.php?like_id=<?= $book["id"]; ?>">Like</a>
+                        <a class="btn btn-primary" href="profil.php?id=<?=$_SESSION["identity"]["id"];?>&unlikeBook=<?= $book["id"]; ?>">💔</a>
                         </p>
                     </div>
                 </div>
