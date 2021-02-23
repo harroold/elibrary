@@ -1,0 +1,13 @@
+body {
+    font-family: "Spectral", serif;
+}
+
+.bookcase .card-img, .card-img-bottom, .card-img-top {
+    height: 410px;
+    object-fit: cover;
+}
+
+.bookcase .card-text {
+    height: 144px;
+    overflow-y: hidden;
+}
